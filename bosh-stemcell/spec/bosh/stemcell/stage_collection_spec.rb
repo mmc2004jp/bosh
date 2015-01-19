@@ -29,7 +29,6 @@ module Bosh::Stemcell
               :base_ubuntu_build_essential,
               :base_ubuntu_packages,
               :base_ssh,
-              :bosh_dpkg_list,
               :bosh_sysstat,
               :bosh_sysctl,
               :system_kernel,
@@ -89,36 +88,51 @@ module Bosh::Stemcell
     describe '#infrastructure_stages' do
       context 'when using AWS' do
         let(:infrastructure) { Infrastructure.for('aws') }
-
-        let(:aws_infrastructure_stages) {
-          [
-            :system_aws_network,
-            :system_aws_modules,
-            :system_parameters,
-            :bosh_clean,
-            :bosh_harden,
-            :bosh_harden_ssh,
-            :image_create,
-            :image_install_grub,
-            :image_aws_update_grub,
-            :image_aws_prepare_stemcell,
-            :stemcell
-          ]
-        }
-
+ 
         context 'when the operating system is CentOS' do
           let(:operating_system) { OperatingSystem.for('centos') }
 
-          it 'returns the correct stages' do
-            expect(stage_collection.infrastructure_stages).to eq(aws_infrastructure_stages)
+          it 'has the correct stages' do
+            expect(stage_collection.infrastructure_stages).to eq(
+              [
+                :system_aws_network,
+                :system_aws_modules,
+                :system_parameters,
+                :bosh_clean,
+                :bosh_harden,
+                :bosh_harden_ssh,
+                :image_create,
+                :image_install_grub,
+                :image_aws_update_grub,
+                :image_aws_prepare_stemcell,
+                :bosh_license,
+                :stemcell
+              ]
+            )
           end
         end
 
         context 'when the operating system is Ubuntu' do
           let(:operating_system) { OperatingSystem.for('ubuntu') }
 
-          it 'returns the correct stages' do
-            expect(stage_collection.infrastructure_stages).to eq(aws_infrastructure_stages)
+          it 'has the correct stages' do
+            expect(stage_collection.infrastructure_stages).to eq(
+              [
+                :system_aws_network,
+                :system_aws_modules,
+                :system_parameters,
+                :bosh_clean,
+                :bosh_harden,
+                :bosh_harden_ssh,
+                :image_create,
+                :image_install_grub,
+                :image_aws_update_grub,
+                :image_aws_prepare_stemcell,
+                :bosh_dpkg_list,
+                :bosh_license,
+                :stemcell
+              ]
+            )
           end
 
         end
@@ -143,6 +157,7 @@ module Bosh::Stemcell
                 :image_install_grub,
                 :image_openstack_qcow2,
                 :image_openstack_prepare_stemcell,
+                :bosh_license,
                 :stemcell_openstack
               ]
             )
@@ -167,6 +182,8 @@ module Bosh::Stemcell
                 :image_install_grub,
                 :image_openstack_qcow2,
                 :image_openstack_prepare_stemcell,
+                :bosh_dpkg_list,
+                :bosh_license,
                 :stemcell_openstack
               ]
             )
@@ -193,6 +210,7 @@ module Bosh::Stemcell
                 :image_ovf_vmx,
                 :image_ovf_generate,
                 :image_ovf_prepare_stemcell,
+                :bosh_license,
                 :stemcell
               ]
             )
@@ -215,6 +233,8 @@ module Bosh::Stemcell
                 :image_ovf_vmx,
                 :image_ovf_generate,
                 :image_ovf_prepare_stemcell,
+                :bosh_dpkg_list,
+                :bosh_license,
                 :stemcell
               ]
             )
@@ -241,6 +261,8 @@ module Bosh::Stemcell
                 :image_ovf_vmx,
                 :image_ovf_generate,
                 :image_ovf_prepare_stemcell,
+                :bosh_dpkg_list,
+                :bosh_license,
                 :stemcell
               ]
             )
@@ -263,6 +285,7 @@ module Bosh::Stemcell
                 :image_ovf_vmx,
                 :image_ovf_generate,
                 :image_ovf_prepare_stemcell,
+                :bosh_license,
                 :stemcell
               ]
             )

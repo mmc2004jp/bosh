@@ -48,7 +48,15 @@ module Bosh::Stemcell
         warden_stages
       end
     end
-
+    
+    def aws_stages
+      if operating_system.instance_of?(OperatingSystem::Centos)
+        centos_aws_stages
+      else
+        default_aws_stages
+      end
+    end
+    
     def openstack_stages
       if operating_system.instance_of?(OperatingSystem::Centos)
         centos_openstack_stages
@@ -102,7 +110,6 @@ module Bosh::Stemcell
         :base_ubuntu_build_essential,
         :base_ubuntu_packages,
         :base_ssh,
-        :bosh_dpkg_list,
         :bosh_sysstat,
         :bosh_sysctl,
         :system_kernel,
@@ -132,6 +139,8 @@ module Bosh::Stemcell
         :image_ovf_vmx,
         :image_ovf_generate,
         :image_ovf_prepare_stemcell,
+        # License file
+        :bosh_license,
         :stemcell,
       ]
     end
@@ -148,6 +157,8 @@ module Bosh::Stemcell
         :image_ovf_vmx,
         :image_ovf_generate,
         :image_ovf_prepare_stemcell,
+        # License file
+        :bosh_license,
         :stemcell
       ]
     end
@@ -166,12 +177,14 @@ module Bosh::Stemcell
         :image_install_grub,
         :image_openstack_qcow2,
         :image_openstack_prepare_stemcell,
+        # License file
+        :bosh_license,
         # Final stemcell
         :stemcell_openstack,
       ]
     end
 
-    def aws_stages
+    def centos_aws_stages
       [
         # Misc
         :system_aws_network,
@@ -186,6 +199,30 @@ module Bosh::Stemcell
         :image_install_grub,
         :image_aws_update_grub,
         :image_aws_prepare_stemcell,
+        # License file
+        :bosh_license,
+        # Final stemcell
+        :stemcell,
+      ]
+    end
+    def default_aws_stages
+      [
+        # Misc
+        :system_aws_network,
+        :system_aws_modules,
+        :system_parameters,
+        # Finalisation
+        :bosh_clean,
+        :bosh_harden,
+        :bosh_harden_ssh,
+        # Image/bootloader
+        :image_create,
+        :image_install_grub,
+        :image_aws_update_grub,
+        :image_aws_prepare_stemcell,
+        # Package list, License file
+        :bosh_dpkg_list,
+        :bosh_license,
         # Final stemcell
         :stemcell,
       ]
@@ -208,6 +245,9 @@ module Bosh::Stemcell
         :image_install_grub,
         :image_openstack_qcow2,
         :image_openstack_prepare_stemcell,
+        # Package list, License file
+        :bosh_dpkg_list,
+        :bosh_license,
         # Final stemcell
         :stemcell_openstack,
       ]
@@ -228,6 +268,9 @@ module Bosh::Stemcell
         :image_ovf_vmx,
         :image_ovf_generate,
         :image_ovf_prepare_stemcell,
+        # Package list, License file
+        :bosh_dpkg_list,
+        :bosh_license,
         # Final stemcell
         :stemcell,
       ]
@@ -248,6 +291,9 @@ module Bosh::Stemcell
         :image_ovf_vmx,
         :image_ovf_generate,
         :image_ovf_prepare_stemcell,
+        # Package list, License file
+        :bosh_dpkg_list,
+        :bosh_license,
         # Final stemcell
         :stemcell
       ]
